@@ -1,0 +1,10 @@
+# index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+
+    #  path: /
+    #  controller: App\Controller\QuestionController::index
+
+      # path: /message
+      # controller: App\Controller\QuestionController::show
