@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Document\Question;
@@ -73,12 +74,12 @@ class QuestionController extends  AbstractController {
      * @Route("/questions", name="post_question", methods={"POST"})
      * 
      */
-    public function postQuestion() {
+    public function postQuestion(Request $request) {
 
         $question = new Question();
 
-        $question->setQuestionTitle('This is the title of my question');
-        $question->setQuestionDescription('What is the description of my question');
+        $question->setQuestionTitle($request->get('title'));
+        $question->setQuestionDescription($request->get('description'));
 
         // $dm =  $this->get('doctrine_mongodb')->getManager();
 
