@@ -37,11 +37,31 @@ services:
         public: false  #setting this to false will not let you to access this container calling by container->get('service_id')
         arguments:
             - App\Document\Question
+    
+    'answer_repo':
+        class: App\Repository\AnswerRepository
+        factory: ["@doctrine_mongodb", "getRepository"]
+        arguments:
+            - App\Document\Answer
         
+    'comment_repo':
+        class:  App\Repository\CommentRepository
+        factory: ["@doctrine_mongodb", "getRepository"]
+        arguments:
+            - App\Document\Comment
+    
 
     App\Controller\QuestionController:
         arguments:
-            $repository: '@question_repo'
+            $questionRepository: '@question_repo'
+            $answerRepository: '@answer_repo'
+    App\Controller\AnswerController:
+        arguments:
+            $questionRepository: '@question_repo'
+            $answerRepository: '@answer_repo'
+    App\Controller\CommentController:
+        arguments:
+            $commentRepository: '@comment_repo'
        
 
 

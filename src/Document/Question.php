@@ -6,8 +6,10 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\HasLifecycleCallbacks;
 use JsonSerializable;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
- * @MongoDB\Document
+ * @MongoDB\Document(repositoryClass="App\Repository\QuestionRepository")
  * 
  * @HasLifecycleCallbacks() 
  */
@@ -32,7 +34,18 @@ class Question implements JsonSerializable {
      */
     private $questionDescription;
 
+    /**
+     * @MongoDB\ReferenceMany(targetDocument="Answer", mappedBy="question")
+     */
+    public $answers;
 
+    public function __construct() {
+        $this->answers = new ArrayCollection();
+    }
+
+    public function getId() {
+        return $this->id;
+    }
     public function getQuestionTitle(): ? string {
         return $this->questionTitle;
     }
@@ -49,6 +62,15 @@ class Question implements JsonSerializable {
         $this->questionDescription = $questionDescription;
     }
 
+    public function setAnswer(Answer $answer) {
+            $this->answers[] = $answer;
+            return $this;
+        }
+
+    public function getAnswers() {
+        return $this->answers->toArray();
+    }
+
 
     public function jsonSerialize(): array
     {
@@ -57,7 +79,8 @@ class Question implements JsonSerializable {
              'question_title' => $this->questionTitle,
              'question_description' => $this->questionDescription,
              'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
-             'updated_at' => $this->updatedAt->format('Y-m-d H:i:s')
+             'updated_at' => $this->updatedAt->format('Y-m-d H:i:s'),
+             'answers' => $this->getAnswers()
             //  'updated_at' => ((array) $this->updatedAt)['date']
         ];
         
