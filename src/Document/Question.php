@@ -35,7 +35,7 @@ class Question implements JsonSerializable {
     private $questionDescription;
 
     /**
-     * @MongoDB\ReferenceMany(targetDocument="Answer", mappedBy="question")
+     * @MongoDB\ReferenceMany(targetDocument="Answer", mappedBy="question", cascade={"remove"})
      */
     public $answers;
 

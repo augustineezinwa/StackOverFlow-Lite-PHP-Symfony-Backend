@@ -31,7 +31,7 @@ class Answer implements JsonSerializable {
   private $question;
 
   /**
-   * @MongoDB\ReferenceMany(targetDocument="Comment", mappedBy="answer")
+   * @MongoDB\ReferenceMany(targetDocument="Comment", mappedBy="answer", cascade={"remove"})
    */
   private $comments;
 
