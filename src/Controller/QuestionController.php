@@ -54,6 +54,7 @@ class QuestionController extends  AbstractController {
         // var_dump($this->get('doctrine_mongodb')->getManager());
 
         // dump($hs->getLength(['fish', 'donkey', 2]));
+        
         $questions = $this->questionRepository->findAll();
 
          return $this->json(['data' => $questions]);
