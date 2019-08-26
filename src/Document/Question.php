@@ -37,7 +37,13 @@ class Question implements JsonSerializable {
     /**
      * @MongoDB\ReferenceMany(targetDocument="Answer", mappedBy="question", cascade={"remove"})
      */
-    public $answers;
+    private $answers;
+
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="User", inversedBy="questions")
+     */
+    private $author;
+
 
     public function __construct() {
         $this->answers = new ArrayCollection();
@@ -69,6 +75,15 @@ class Question implements JsonSerializable {
 
     public function getAnswers() {
         return $this->answers->toArray();
+    }
+
+    public function getAuthor(): ?User {
+        return $this->author;
+    }
+
+    public function setAuthor(User $author): self {
+        $this->author = $author;
+        return  $this;
     }
 
 

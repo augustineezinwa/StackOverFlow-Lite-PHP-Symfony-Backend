@@ -45,6 +45,15 @@ class User implements UserInterface, JsonSerializable
      */
     private $password;
 
+    /**
+     * @MongoDB\ReferenceMany(targetDocument="Question", mappedBy="author")
+     */
+    private $questions;
+
+    
+    public function getQuestions() {
+        return $this->questions->toArray();
+    }
 
     public function getId() {
         return $this->id;

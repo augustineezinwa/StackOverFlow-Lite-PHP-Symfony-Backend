@@ -9,7 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Document\Question;
 use App\Repository\QuestionRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Service\HelperService;
@@ -18,7 +19,7 @@ use App\Repository\AnswerRepository;
 
 
 /**
- * @IsGranted("ROLE_USER")
+ * 
  * @Route("/api/v1")
  * 
  */
@@ -68,16 +69,19 @@ class QuestionController extends  AbstractController {
      * show a single question
      * 
      * @Route("/questions/{questionId}", name="show_a_question", methods={"GET"})
+     * @ParamConverter("question", options={"id" = "questionId"})
+     * @IsGranted("QUESTION_EDIT", subject="question")
      */
-    public function getAQuestion($questionId) {
+    public function getAQuestion(Question $question) {
 
+        
         // $repository = $this->dm->getRepository(Question::class);
 
-        $questions = $this->questionRepository->find($questionId);
+        // $question = $this->questionRepository->find($questionId);
 
-        if(! $questions) return $this->json(['message' => 'question not found'], 404);
+        // if(! $question) return $this->json(['message' => 'question not found'], 404);
 
-        return new JsonResponse(['data' => $questions]);
+        return new JsonResponse(['data' => $question]);
 
     }
 
@@ -92,6 +96,7 @@ class QuestionController extends  AbstractController {
 
         $question->setQuestionTitle($request->get('title'));
         $question->setQuestionDescription($request->get('description'));
+        $question->setAuthor($this->getUser());
 
         // $dm =  $this->get('doctrine_mongodb')->getManager();
 
