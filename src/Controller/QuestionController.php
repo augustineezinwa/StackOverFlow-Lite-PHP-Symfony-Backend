@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Document\Question;
 use App\Repository\QuestionRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -17,7 +18,9 @@ use App\Repository\AnswerRepository;
 
 
 /**
+ * @IsGranted("ROLE_USER")
  * @Route("/api/v1")
+ * 
  */
 class QuestionController extends  AbstractController {
 

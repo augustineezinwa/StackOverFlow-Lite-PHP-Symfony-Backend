@@ -7,13 +7,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 
 use App\Repository\UserRepository;
 use App\Document\User;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-
-
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @Route("/api/v1")
@@ -31,7 +31,7 @@ class AuthController extends  AbstractController {
     /**
      * @Route("/auth/signup", name="sign_up", methods={"POST"})
      */
-    public function signup(Request $request, UserPasswordEncoderInterface $userPasswordEncoder) {
+    public function signup(Request $request, UserPasswordEncoderInterface $userPasswordEncoder, JWTEncoderInterface $tokenEncoder) {
 
         $email = $request->get('email');
         $password = $request->get('password');
@@ -49,12 +49,27 @@ class AuthController extends  AbstractController {
         $this->dm->persist($user);
         $this->dm->flush();
 
-        return $this->json(['message' => 'registration successful', 'data' => $user], 201);
+        return $this->json(
+            [
+                'message' => 'registration successful', 
+                'data' => $user,
+                'token' => $tokenEncoder->encode(['role' => $user->getRoles(), 'username' => $user->getEmail()])
 
+            ]);
+    }
 
-
-
+    /**
+     * @Route("/auth/login", name="login", methods={"POST"})
+     */
+    public function login(JWTEncoderInterface $tokenEncoder) {
+    
+        return $this->json(
+            ['message' => 'you are logged in',
+            'token' => $tokenEncoder->encode(
+                ['role' => $this->getUser()->getRoles(),
+                 'username' => $this->getUser()->getEmail()])]);
 
     }
+
 
 }

@@ -15,3 +15,7 @@
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+##editor variables
+src/.DS_Store
+.DS_Store
